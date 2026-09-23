@@ -1,0 +1,7 @@
+# 构建上下文：Dockerfile + rootfs/
+# 本地构建（若本机有 Docker）：
+#   docker build -t sub2api-cloudflared:test .
+# 或推送后由 GitHub Actions 构建 GHCR 镜像。
+*
+!Dockerfile
+!rootfs/**

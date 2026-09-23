@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv sh
+# 隧道服务：cloudflared 固定版本；Token 来自运行时 Secret 注入
+# 崩溃/退出后由 s6 自动重启（进程管理器负责恢复，无需整容器重启）
+# 本地 metrics 端口 127.0.0.1:49873 暴露 /ready（200=已连上边缘）
+if [ -z "${TUNNEL_TOKEN}" ]; then
+  echo "[cloudflared] TUNNEL_TOKEN 未注入，拒绝启动（外部将不可达，应由监控发现）" >&2
+  exit 1
+fi
+exec s6-setuidgid sub2api /usr/local/bin/cloudflared tunnel \
+  --no-autoupdate \
+  --metrics 127.0.0.1:49873 \
+  run --token "${TUNNEL_TOKEN}"
