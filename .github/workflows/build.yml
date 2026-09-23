@@ -44,11 +44,13 @@ jobs:
             ${{ env.IMAGE }}:0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}
             ${{ env.IMAGE }}:latest
 
-      - name: 验证包可匿名访问（仓库 public → 新包创建即为 public）
+      - name: 验证包可匿名访问（GHCR Registry v2 认证流）
         run: |
-          set -x
+          set -e
           for t in latest 0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}; do
+            TOK=$(curl -s "https://ghcr.io/token?scope=repository:${{ github.repository_owner }}/sub2api-tunnel:pull&service=ghcr.io" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
             code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Authorization: Bearer $TOK" \
               -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json" \
               "https://ghcr.io/v2/${{ github.repository_owner }}/sub2api-tunnel/manifests/$t")
             echo "tag=$t anon_http=$code"
