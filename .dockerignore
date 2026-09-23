@@ -1,7 +1,7 @@
-# 构建上下文：Dockerfile + rootfs/
+# 构建上下文：Dockerfile + start.sh
 # 本地构建（若本机有 Docker）：
-#   docker build -t sub2api-cloudflared:test .
+#   docker build -t sub2api-tunnel:test .
 # 或推送后由 GitHub Actions 构建 GHCR 镜像。
 *
 !Dockerfile
-!rootfs/**
+!start.sh

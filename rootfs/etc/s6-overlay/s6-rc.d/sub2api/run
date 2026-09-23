@@ -1,3 +1,0 @@
-#!/usr/bin/with-contenv sh
-# 应用服务：调用原镜像入口（保留权限修复与降权逻辑），崩溃后由 s6 自动重启
-exec /app/docker-entrypoint.sh /app/sub2api
