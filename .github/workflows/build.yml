@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 env:
-  IMAGE: ghcr.io/${{ github.repository_owner }}/sub2api-cloudflared
+  IMAGE: ghcr.io/${{ github.repository_owner }}/sub2api-tunnel
   CLOUDFLARED_VERSION: "2026.9.1"
 
 jobs:
@@ -44,10 +44,13 @@ jobs:
             ${{ env.IMAGE }}:0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}
             ${{ env.IMAGE }}:latest
 
-      - name: 将包设为公开（Northflank 可匿名拉取）
+      - name: 验证包可匿名访问（仓库 public → 新包创建即为 public）
         run: |
-          curl -sSf -X POST \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            -d '{"visibility":"public"}' \
-            "https://api.github.com/user/packages/container/sub2api-cloudflared/visibility"
+          set -x
+          for t in latest 0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json" \
+              "https://ghcr.io/v2/${{ github.repository_owner }}/sub2api-tunnel/manifests/$t")
+            echo "tag=$t anon_http=$code"
+            test "$code" = "200"
+          done
