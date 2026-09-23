@@ -43,3 +43,11 @@ jobs:
           tags: |
             ${{ env.IMAGE }}:0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}
             ${{ env.IMAGE }}:latest
+
+      - name: 将包设为公开（Northflank 可匿名拉取）
+        run: |
+          curl -sSf -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{"visibility":"public"}' \
+            "https://api.github.com/user/packages/container/sub2api-cloudflared/visibility"
