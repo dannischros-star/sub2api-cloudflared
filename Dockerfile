@@ -15,7 +15,7 @@
 #   run as pid 1），故采用启动脚本 + 信号转发（Docker 官方认可的
 #   "verified startup script" 多进程方式）。
 # ============================================================
-ARG BASE_IMAGE=weishaw/sub2api:0.2.7
+ARG BASE_IMAGE=weishaw/sub2api:0.2.15
 FROM ${BASE_IMAGE}
 
 ARG CLOUDFLARED_VERSION=2026.9.1

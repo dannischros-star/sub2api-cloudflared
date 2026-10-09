@@ -41,13 +41,12 @@ jobs:
           build-args: |
             CLOUDFLARED_VERSION=${{ env.CLOUDFLARED_VERSION }}
           tags: |
-            ${{ env.IMAGE }}:0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}
-            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:0.2.15-cfl-${{ env.CLOUDFLARED_VERSION }}
 
       - name: 验证包可匿名访问（GHCR Registry v2 认证流）
         run: |
           set -e
-          for t in latest 0.2.7-cfl-${{ env.CLOUDFLARED_VERSION }}; do
+          for t in 0.2.15-cfl-${{ env.CLOUDFLARED_VERSION }}; do
             TOK=$(curl -s "https://ghcr.io/token?scope=repository:${{ github.repository_owner }}/sub2api-tunnel:pull&service=ghcr.io" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
             code=$(curl -s -o /dev/null -w "%{http_code}" \
               -H "Authorization: Bearer $TOK" \
